@@ -1,0 +1,19 @@
+{
+  "name": "Silveira, Piffer e Campanelli Advocacia",
+  "short_name": "SP&C Advocacia",
+  "description": "Escritório de advocacia em Araçatuba/SP — Direito do Trabalho e Previdenciário",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d2820",
+  "theme_color": "#0d2820",
+  "lang": "pt-BR",
+  "icons": [
+    {"src": "assets/img/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "assets/img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ],
+  "shortcuts": [
+    {"name": "WhatsApp", "url": "https://wa.me/5518996083709?text=Ol%C3%A1%2C+gostaria+de+agendar+um+atendimento.", "description": "Falar com o escritório"},
+    {"name": "Contato", "url": "/contato.html", "description": "Endereço e telefones"}
+  ]
+}
