@@ -429,64 +429,68 @@ p{ margin:0; }
   border:1px dashed rgba(218,191,143,.3);
 }
 .hero-mark-frame .hero-mark-logo{ width:46%; height:auto; opacity:.95; filter: drop-shadow(0 16px 30px rgba(0,0,0,.35)); }
+/* Ring icons — posicionados pelo orbit-arm, na borda superior do círculo */
 .hero-mark-ring-icon{
-  /* posicionado no topo do orbit-arm, centralizado na borda do círculo */
-  position:absolute; top:-27px; left:50%;
-  translate: -50% 0;            /* propriedade separada — não interfere com transform */
+  position:absolute;
+  top:-27px;
+  left:calc(50% - 27px); /* centraliza o ícone de 54px na borda do círculo */
   width:54px; height:54px; border-radius:50%;
   background: var(--gold); color: var(--green);
   display:flex; align-items:center; justify-content:center;
   box-shadow: 0 12px 24px rgba(0,0,0,.3);
-  will-change: transform;
 }
 .hero-mark-ring-icon svg{ width:24px; height:24px; }
 
-/* Orbit arms — giram em torno do centro; o ícone dentro contra-rotaciona */
+/* Orbit arms — giram em torno do centro do frame */
 .orbit-arm{
   position:absolute; inset:0; border-radius:50%;
   pointer-events:none;
-  will-change: transform;
 }
+
+/* Balança — sentido horário, 18s */
 .orbit-arm-1{
   animation: orbit 18s linear infinite;
   animation-delay: -3s;
 }
+.orbit-arm-1 .hero-mark-ring-icon{
+  animation: counter-orbit 18s linear infinite;
+  animation-delay: -3s;
+}
+
+/* Escudo — sentido horário, 25s (velocidade diferente cria efeito interessante) */
 .orbit-arm-2{
   animation: orbit 25s linear infinite;
   animation-delay: -14s;
 }
 .orbit-arm-2 .hero-mark-ring-icon{
   background: var(--white);
-  animation-duration: 25s;
+  animation: counter-orbit 25s linear infinite;
   animation-delay: -14s;
 }
-.orbit-arm .hero-mark-ring-icon{
-  animation: counter-orbit 18s linear infinite;
-  animation-delay: -3s;
-}
 
-/* Logo: respiração suave */
-.hero-mark-logo{
-  will-change: transform;
+/* Logo: respiração suave — transform only, GPU composited */
+.hero-mark-frame .hero-mark-logo{
   animation: logo-breathe 5s ease-in-out infinite;
 }
 
 @keyframes orbit{
-  to{ transform: rotate(360deg); }
+  from{ transform: rotate(0deg); }
+  to  { transform: rotate(360deg); }
 }
 @keyframes counter-orbit{
-  to{ transform: rotate(-360deg); }
+  from{ transform: rotate(0deg); }
+  to  { transform: rotate(-360deg); }
 }
 @keyframes logo-breathe{
-  0%,100%{ transform: scale(1); }
-  50%  { transform: scale(1.05); }
+  0%,100%{ transform: scale(1);    }
+  50%    { transform: scale(1.06); }
 }
 
 @media (prefers-reduced-motion: reduce){
-  .orbit-arm, .orbit-arm .hero-mark-ring-icon, .hero-mark-logo{
-    animation: none;
-    will-change: auto;
-  }
+  .orbit-arm-1, .orbit-arm-2,
+  .orbit-arm-1 .hero-mark-ring-icon,
+  .orbit-arm-2 .hero-mark-ring-icon,
+  .hero-mark-frame .hero-mark-logo{ animation: none; }
 }
 
 @media (min-width:900px){
@@ -801,6 +805,7 @@ p{ margin:0; }
   align-items: center;
   gap: 0;
   width: max-content;
+  flex-shrink: 0;      /* impede compressão pelo flex pai — mantém largura real */
   animation: ticker-scroll 55s linear infinite;
   will-change: transform;
 }
