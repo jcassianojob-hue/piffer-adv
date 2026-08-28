@@ -430,14 +430,64 @@ p{ margin:0; }
 }
 .hero-mark-frame .hero-mark-logo{ width:46%; height:auto; opacity:.95; filter: drop-shadow(0 16px 30px rgba(0,0,0,.35)); }
 .hero-mark-ring-icon{
-  position:absolute; width:54px; height:54px; border-radius:50%;
+  /* posicionado no topo do orbit-arm, centralizado na borda do círculo */
+  position:absolute; top:-27px; left:50%;
+  translate: -50% 0;            /* propriedade separada — não interfere com transform */
+  width:54px; height:54px; border-radius:50%;
   background: var(--gold); color: var(--green);
   display:flex; align-items:center; justify-content:center;
   box-shadow: 0 12px 24px rgba(0,0,0,.3);
+  will-change: transform;
 }
 .hero-mark-ring-icon svg{ width:24px; height:24px; }
-.ring-icon-1{ top:-6px; right:14%; }
-.ring-icon-2{ bottom:6%; left:-10px; background:var(--white); }
+
+/* Orbit arms — giram em torno do centro; o ícone dentro contra-rotaciona */
+.orbit-arm{
+  position:absolute; inset:0; border-radius:50%;
+  pointer-events:none;
+  will-change: transform;
+}
+.orbit-arm-1{
+  animation: orbit 18s linear infinite;
+  animation-delay: -3s;
+}
+.orbit-arm-2{
+  animation: orbit 25s linear infinite;
+  animation-delay: -14s;
+}
+.orbit-arm-2 .hero-mark-ring-icon{
+  background: var(--white);
+  animation-duration: 25s;
+  animation-delay: -14s;
+}
+.orbit-arm .hero-mark-ring-icon{
+  animation: counter-orbit 18s linear infinite;
+  animation-delay: -3s;
+}
+
+/* Logo: respiração suave */
+.hero-mark-logo{
+  will-change: transform;
+  animation: logo-breathe 5s ease-in-out infinite;
+}
+
+@keyframes orbit{
+  to{ transform: rotate(360deg); }
+}
+@keyframes counter-orbit{
+  to{ transform: rotate(-360deg); }
+}
+@keyframes logo-breathe{
+  0%,100%{ transform: scale(1); }
+  50%  { transform: scale(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .orbit-arm, .orbit-arm .hero-mark-ring-icon, .hero-mark-logo{
+    animation: none;
+    will-change: auto;
+  }
+}
 
 @media (min-width:900px){
   .hero{ padding: 76px 0 84px; }
@@ -702,6 +752,110 @@ p{ margin:0; }
 /* Performance */
 .section,.values-section,.cta-banner,.site-footer{content-visibility:auto;contain-intrinsic-size:auto 600px;}
 .hero,.site-header{content-visibility:visible;}
+
+/* =========================================================
+   CARROSSEL DE NOTÍCIAS
+   ========================================================= */
+.news-ticker{
+  background: var(--green-soft);
+  border-top: 1px solid rgba(218,191,143,.22);
+  border-bottom: 1px solid rgba(218,191,143,.12);
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+}
+.news-ticker-label{
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 22px;
+  background: var(--gold);
+  color: var(--green);
+  font-family: var(--font-body);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  z-index: 2;
+  position: relative;
+}
+.news-ticker-label::after{
+  content: "";
+  position: absolute;
+  right: -14px; top: 0; bottom: 0;
+  width: 14px;
+  background: linear-gradient(to right, var(--gold), transparent);
+}
+.news-ticker-label svg{ width:15px; height:15px; flex:none; }
+
+.news-ticker-wrap{
+  flex: 1;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0, black 40px, black calc(100% - 40px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 40px, black calc(100% - 40px), transparent 100%);
+}
+.news-track{
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: max-content;
+  animation: ticker-scroll 55s linear infinite;
+  will-change: transform;
+}
+.news-ticker-wrap:hover .news-track{ animation-play-state: paused; }
+
+@keyframes ticker-scroll{
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.news-card{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 28px;
+  border-right: 1px solid rgba(218,191,143,.15);
+  text-decoration: none;
+  transition: background .2s;
+  min-width: 0;
+  flex-shrink: 0;
+  max-width: 380px;
+}
+.news-card:hover{ background: rgba(218,191,143,.06); }
+
+.news-tag{
+  flex: none;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(218,191,143,.12);
+  border: 1px solid rgba(218,191,143,.25);
+  border-radius: 100px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+.news-title{
+  font-size: .88rem;
+  color: var(--white);
+  opacity: .88;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+  line-height: 1.3;
+  transition: opacity .2s;
+}
+.news-card:hover .news-title{ opacity: 1; }
+.news-date{
+  flex: none;
+  font-size: .73rem;
+  color: var(--muted-on-dark);
+  white-space: nowrap;
+}
 </style>
 <link rel="preload" href="assets/fonts/work-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/ibm-plex-serif-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -842,12 +996,27 @@ if('serviceWorker' in navigator){
       <div class="hero-mark" aria-hidden="true">
         <div class="hero-mark-frame">
           <svg class="logo-mark logo-gold hero-mark-logo" viewBox="0 0 4096 3885"><use href="#logo-mark"></use></svg>
-          <span class="hero-mark-ring-icon ring-icon-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l-3 5a4 4 0 0 0 8 0l-3-5M19 8l-3 5a4 4 0 0 0 8 0l-3-5M5 8h14M9 3h6"/></svg></span>
-          <span class="hero-mark-ring-icon ring-icon-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-4z"/><path d="m9 12 2 2 4-4"/></svg></span>
+          <div class="orbit-arm orbit-arm-1">
+            <span class="hero-mark-ring-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l-3 5a4 4 0 0 0 8 0l-3-5M19 8l-3 5a4 4 0 0 0 8 0l-3-5M5 8h14M9 3h6"/></svg></span>
+          </div>
+          <div class="orbit-arm orbit-arm-2">
+            <span class="hero-mark-ring-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-4z"/><path d="m9 12 2 2 4-4"/></svg></span>
+          </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- ===== CARROSSEL DE NOTÍCIAS ===== -->
+  <div class="news-ticker" aria-label="Notícias do escritório">
+    <div class="news-ticker-label" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8z"/></svg>
+      Notícias
+    </div>
+    <div class="news-ticker-wrap">
+      <div class="news-track" id="newsTicker"></div>
+    </div>
+  </div>
 
   <section class="section" id="areas">
     <div class="container">
@@ -1064,6 +1233,25 @@ if('serviceWorker' in navigator){
     <button onclick="lgpdNo()" style="background:transparent;color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.25);padding:9px 16px;border-radius:100px;font-size:.85rem;cursor:pointer;">Recusar</button>
   </div>
 </div>
+
+<script src="noticias.js"></script>
+<script>
+(function(){
+  var track = document.getElementById('newsTicker');
+  if(!track || !window.NOTICIAS) return;
+  function criarCard(n){
+    var a = document.createElement('a');
+    a.className = 'news-card';
+    a.href = n.link;
+    a.innerHTML =
+      '<span class="news-tag">' + n.tag + '</span>' +
+      '<span class="news-title">' + n.titulo + '</span>' +
+      '<span class="news-date">' + n.data + '</span>';
+    return a;
+  }
+  NOTICIAS.concat(NOTICIAS).forEach(function(n){ track.appendChild(criarCard(n)); });
+})();
+</script>
 
 <script>
 (function(){
